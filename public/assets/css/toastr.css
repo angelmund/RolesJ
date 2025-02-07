@@ -1,0 +1,13 @@
+.toast-center {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%);
+    margin: 0 auto;
+    position: fixed !important;
+    z-index: 1050; /* Asegúrate de que esté sobre otros elementos */
+}
+
+.dt-paging-button:hover {
+    background-color: #b75527; /* Cambia este color al que prefieras */
+    color: #ffffff; /* Cambia este color al que prefieras */
+}
