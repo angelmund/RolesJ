@@ -38,7 +38,7 @@
                             <td class="py-2 px-4 border">{{ $loop->iteration }}</td>
                             <td class="py-2 px-4 border">{{ $equipo_torneo_jugador->equipo->nombre }}</td>
                             <td class="py-2 px-4 border">
-                                {{ $equipo_torneo_jugador->equipo->jugadores()->count() }}
+                                {{ $equipo_torneo_jugador->equipo->jugador_equipos()->count() }}
                             </td>
                             <td class="py-2 px-4 border flex justify-center items-center">
                                 {{--  <img src="{{ asset($equipo_torneo_jugador->equipo->escudo) }}" alt="Escudo" width="200" height="200">  --}}

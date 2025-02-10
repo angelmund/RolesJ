@@ -121,7 +121,7 @@
                         <div>
                             <label for="num_jugador" class="block text-sm font-medium text-gray-700">N&uacute;mero de
                                 Camiseta</label>
-                            <input type="number" min="1" max="20" id="num_jugador" name="num_jugador"
+                            <input type="text" id="num_jugador" name="num_jugador"
                                 placeholder="Ingresa el número del Jugador"
                                 class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             @if ($errors->has('num_jugador'))
@@ -221,51 +221,39 @@
                             <tr class="border hover:bg-gray-100" id="jugador-{{ $jugador->id }}">
                                 <td class="py-2 px-4 border text-center">
                                     @if ($jugador->foto)
-                                        <img src="{{ asset('/' . $jugador->foto) }}" alt="Foto"
+                                        <img src="{{ asset('/storage/' . $jugador->foto) }}" alt="Foto"
                                             class="w-24 h-24">
                                     @else
-                                        <img src="{{ asset($equipo->equipo->escudo) }}" alt="Escudo"
+                                        <img src="{{ asset('assets/avatar-jugador.png') }}" alt="Foto"
                                             width="200" height="200">
                                     @endif
+                                   
                                 </td>
                                 <td class="py-2 px-4 border text-center">
                                     <span class="jugador-data">{{ $jugador->nombre }}</span>
-                                    <input type="text" class="jugador-input hidden w-full"
-                                        value="{{ $jugador->nombre }}">
+                                    
                                 </td>
                                 <td class="py-2 px-4 border text-center">
                                     <span class="jugador-data">{{ $jugador->edad }}</span>
-                                    <input min="1" type="number" class="jugador-input hidden w-full"
-                                        value="{{ $jugador->edad }}">
+                                    
                                 </td>
                                 <td class="py-2 px-4 border text-center">
                                     <span class="jugador-data">{{ $jugador->numero_camiseta }}</span>
-                                    <input min="1" type="number" class="jugador-input hidden w-full"
-                                        value="{{ $jugador->numero_camiseta }}">
+                                    
                                 </td>
                                 <td class="py-2 px-4 border text-center">
-                                    <button type="button"
-                                        class="edit-btn inline-flex items-center px-3 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-400 focus:bg-blue-500 active:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition ease-in-out duration-150"
-                                        data-id="{{ $jugador->id }}" onclick="editJugador({{ $jugador->id }})">
-                                        <i class="fas fa-edit m-2"></i> Editar
-                                    </button>
+                                    
+                                    <x-button-edit class="ms-4" data-id="{{ $jugador->id }}"
+                                        onclick="openEditModalHandler(this, '/equipos/jugador/edit/{{ $jugador->id }}', '/equipos/jugador/actualizar/{{ $jugador->id }}', 'Editar Jugador', 'text-blue-500', 'btn btn-primary')">
+                                        <i class="fas fa-pencil m-2"></i> {{ __('Editar') }}
+                                    </x-button-edit> 
                                     <button type="button"
                                         class="delete-btn inline-flex items-center px-3 py-2 bg-red-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-400 focus:bg-red-500 active:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 transition ease-in-out duration-150"
                                         data-id="{{ $jugador->id }}"
                                         onclick="openConfirmDeleteJugadorModal({{ $jugador->id }})">
                                         <i class="fas fa-trash m-2"></i> Eliminar
                                     </button>
-                                    <button type="button"
-                                        class="save-btn hidden inline-flex items-center px-3 py-2 bg-green-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-400 focus:bg-green-500 active:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 transition ease-in-out duration-150"
-                                        data-id="{{ $jugador->id }}" id="actualizar_datos">
-                                        <i class="fas fa-save m-2"></i> Guardar
-                                    </button>
-                                    <button type="button"
-                                        class="cancel-btn hidden inline-flex items-center px-3 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-500 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 transition ease-in-out duration-150"
-                                        data-id="{{ $jugador->id }}" id="editar_datos"
-                                        onclick="cancelEdit({{ $jugador->id }})">
-                                        <i class="fas fa-times m-2"></i> Cancelar
-                                    </button>
+                                    
                                 </td>
                             </tr>
                         @endforeach

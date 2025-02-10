@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon|null $updated_at
  * 
  * @property Collection|Torneo[] $torneos
+ * @property Collection|JugadorEquipo[] $jugador_equipos
  * @property Collection|Partido[] $partidos
  * @property Collection|Posicione[] $posiciones
  *
@@ -36,9 +37,14 @@ class Equipo extends Model
 
 	public function torneos()
 	{
-		return $this->belongsToMany(Torneo::class, 'jugador_equipo_torneo')
-					->withPivot('id', 'jugador_id')
+		return $this->belongsToMany(Torneo::class)
+					->withPivot('id')
 					->withTimestamps();
+	}
+
+	public function jugador_equipos()
+	{
+		return $this->hasMany(JugadorEquipo::class);
 	}
 
 	public function partidos()
@@ -48,12 +54,6 @@ class Equipo extends Model
 
 	public function posiciones()
 	{
-		return $this->hasMany(Posicione::class);
+		return $this->hasMany(Posicion::class);
 	}
-
-	// Definir la relación con el modelo Jugador a través de la tabla pivote
-    public function jugadores()
-    {
-        return $this->belongsToMany(Jugador::class, 'jugador_equipo_torneo', 'equipo_id', 'jugador_id');
-    }
 }

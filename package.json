@@ -19,6 +19,7 @@
     "dependencies": {
         "@popperjs/core": "^2.11.8",
         "bootstrap": "^5.3.3",
+        "flowbite": "^3.1.2",
         "toastr": "^2.1.4"
     }
 }

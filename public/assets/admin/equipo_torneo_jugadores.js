@@ -5,8 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const btn_add = document.getElementById("agregar_jugador");
     const btn_cancel = document.getElementById("cancelar");
     const btn_add_jugador = document.getElementById("agregar");
-    const new_player = document.getElementById("nuevos_jugadores");
-    
+    const new_players = document.getElementById("nuevos_jugadores");
+    const btn_send = document.getElementById("btn_Aceptar");
 
     if (btn_save) {
         btn_save.addEventListener("click", (event) => {
@@ -50,10 +50,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (btn_add_jugador) {
         btn_add_jugador.addEventListener("click", () => {
-            if (new_player) {
-                new_player.classList.remove("hidden");
+            if (new_players) {
+                new_players.classList.remove("hidden");
             }
             agregarJugador();
+        });
+    }
+
+    if (btn_send) {
+        btn_send.addEventListener("click", (event) => {
+            event.preventDefault();
+            // alert("enviando formulario");
+
+            actualizarJugador();
+            closeAlertaConfirm();
         });
     }
 
@@ -80,18 +90,54 @@ document.addEventListener("DOMContentLoaded", () => {
         const numJugador = document.getElementById("num_jugador").value;
         const tbody = document.getElementById("jugadores_tabla");
         const fotografiaElement = document.getElementById("fotografia");
-    
+
+        // Validaciones
+        if (!nombre) {
+            toastr.error("El nombre del jugador es obligatorio.", "Error");
+            return;
+        }
+
+        if (!edad) {
+            toastr.error("La edad del jugador es obligatoria.", "Error");
+            return;
+        }
+
+        if (!Number.isInteger(+edad) || +edad <= 0) {
+            toastr.error(
+                "La edad debe ser un número entero positivo.",
+                "Error"
+            );
+            return;
+        }
+
+        if (!numJugador) {
+            toastr.error("El número de camiseta para el jugador es obligatorio.", "Error");
+            return;
+        }
+
+        if (!Number.isInteger(+numJugador) || +numJugador <= 0) {
+            toastr.error(
+                "El número de camiseta debe ser un número entero positivo.",
+                "Error"
+            );
+            return;
+        }
+
         // Generar un ID único para el jugador
         const id = Date.now();
-    
+
         // Crear una URL de objeto para la imagen
         let fotoURL = `${window.location.origin}/assets/avatar-jugador.png`;
         let fotoFile = null;
-        if (fotografiaElement && fotografiaElement.files && fotografiaElement.files[0]) {
+        if (
+            fotografiaElement &&
+            fotografiaElement.files &&
+            fotografiaElement.files[0]
+        ) {
             fotoURL = URL.createObjectURL(fotografiaElement.files[0]);
             fotoFile = fotografiaElement.files[0];
         }
-    
+
         const tr = document.createElement("tr");
         tr.setAttribute("id", `jugador_${id}`);
         tr.classList.add("border", "hover:bg-gray-100");
@@ -109,12 +155,12 @@ document.addEventListener("DOMContentLoaded", () => {
         </td>
         `;
         tbody.appendChild(tr);
-    
+
         // Guardar el archivo de imagen en el elemento tr para uso posterior
         if (fotoFile) {
             tr.dataset.fotoFile = JSON.stringify(fotoFile);
         }
-    
+
         // Limpiar los campos de entrada después de agregar el jugador
         document.getElementById("nombre_jugador").value = "";
         document.getElementById("edad_jugador").value = "";
@@ -122,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (fotografiaElement) {
             fotografiaElement.value = "";
         }
-    
+
         // Ocultar el formulario de agregar jugador y mostrar el botón agregar jugador
         cancelar();
     }
@@ -137,7 +183,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const nombre = jugador.children[1].innerText;
             const edad = jugador.children[2].innerText;
             const numJugador = jugador.children[3].innerText;
-            
+            const imgElement = jugador.querySelector('img');
+            const fotoSrc = imgElement ? imgElement.src : '';
+    
             const inputNombre = document.createElement("input");
             inputNombre.type = "hidden";
             inputNombre.name = `jugadores[${index}][nombre]`;
@@ -153,31 +201,21 @@ document.addEventListener("DOMContentLoaded", () => {
             inputNumJugador.name = `jugadores[${index}][num_jugador]`;
             inputNumJugador.value = numJugador;
     
+            const inputFoto = document.createElement("input");
+            inputFoto.type = "hidden";
+            inputFoto.name = `jugadores[${index}][foto]`;
+            inputFoto.value = fotoSrc;
+    
             form.appendChild(inputNombre);
             form.appendChild(inputEdad);
             form.appendChild(inputNumJugador);
+            form.appendChild(inputFoto);
     
-            // Manejar la foto
+            // Si hay un archivo de imagen almacenado en el dataset, agregarlo al formulario
             if (jugador.dataset.fotoFile) {
                 const fotoFile = JSON.parse(jugador.dataset.fotoFile);
-                const inputFoto = document.createElement("input");
-                inputFoto.type = "file";
-                inputFoto.name = `jugadores[${index}][foto]`;
-                inputFoto.style.display = "none";
-                
-                // Crear un nuevo File object
-                const file = new File([fotoFile], fotoFile.name, {
-                    type: fotoFile.type,
-                    lastModified: new Date()
-                });
-                
-                // Asignar el File object al input
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-                inputFoto.files = dataTransfer.files;
-                
-                form.appendChild(inputFoto);
-                form.append(`jugadores[${index}][foto]`, jugador.fotoFile);
+                const formData = new FormData(form);
+                formData.append(`jugadores[${index}][foto_file]`, fotoFile);
             }
         });
     }
@@ -215,7 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     toastr.success(data.mensaje, "Éxito");
                     setTimeout(() => {
                         window.location.href = "/equipos";
-                    }, 3000);
+                    }, 1000);
                 } else {
                     toastr.error(data.mensaje, "Error");
                 }
@@ -237,15 +275,12 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
 
-   
-
     async function actualizarDatos() {
         const form = document.getElementById("form");
         const id = document.getElementById("id").value;
         agregarJugadoresAlFormulario();
         const formData = new FormData(form);
-        
-
+        console.log(formData);
         fetch(`/equipos/actualizar/${id}`, {
             method: "POST",
             body: formData,
@@ -268,7 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     // Redirigir o realizar otras acciones después de éxito
                     toastr.success(data.mensaje, "Éxito");
                     setTimeout(() => {
-                        window.location.href = "/equipos";
+                        window.location.reload();
                     }, 3000);
                 } else {
                     toastr.error(data.mensaje, "Error");
@@ -291,14 +326,61 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
 
+    //actualizar jugador
+    async function actualizarJugador() {
+        const id = document.getElementById("id_jugador").value;
+        const form = document.getElementById("modal-edit-form");
 
+        const formData = new FormData(form);
+
+        fetch(`/equipos/jugador/actualizar/` + id, {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRF-TOKEN": document
+                    .querySelector('meta[name="csrf-token"]')
+                    .getAttribute("content"),
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    return response.json().then((err) => {
+                        throw err;
+                    });
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (data.success) {
+                    toastr.success(data.mensaje, "Éxito");
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 3000);
+                } else {
+                    toastr.error(data.mensaje, "Error");
+                }
+            })
+            .catch((error) => {
+                if (error.errors) {
+                    // Si hay errores de validación, muéstralos
+                    Object.values(error.errors).forEach((mensaje) => {
+                        toastr.error(mensaje[0], "Error");
+                    });
+                } else {
+                    toastr.error(
+                        error.mensaje ||
+                            "Hubo un error al enviar el formulario",
+                        "Error"
+                    );
+                }
+                console.error("Error:", error);
+            });
+    }
 });
 
-
- // Eliminar modalidad
- async function eliminarDatos() {
-    const btn_confirm_delete =
-        document.getElementById("btn_confirm_delete");
+// Eliminar modalidad
+async function eliminarDatos() {
+    const btn_confirm_delete = document.getElementById("btn_confirm_delete");
     const id = btn_confirm_delete.getAttribute("data-id");
     // console.log(id);
 
@@ -340,8 +422,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 // Mostrar mensaje de error genérico
                 toastr.error(
-                    error.mensaje ||
-                        "Hubo un error al eliminar el registro",
+                    error.mensaje || "Hubo un error al eliminar el registro",
                     "Error"
                 );
             }
@@ -349,61 +430,82 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 }
 
-function editJugador(id) {
-    const row = document.getElementById(`jugador-${id}`);
-    row.querySelectorAll('.jugador-data').forEach(el => el.classList.add('hidden'));
-    row.querySelectorAll('.jugador-input').forEach(el => el.classList.remove('hidden'));
-    row.querySelector('.edit-btn').classList.add('hidden');
-    row.querySelector('.delete-btn').classList.add('hidden');
-    row.querySelector('.save-btn').classList.remove('hidden');
-    row.querySelector('.cancel-btn').classList.remove('hidden');
-}
+// function editJugador(id) {
+//     const row = document.getElementById(`jugador-${id}`);
+//     row.querySelectorAll(".jugador-data").forEach((el) =>
+//         el.classList.add("hidden")
+//     );
+//     row.querySelectorAll(".jugador-input").forEach((el) =>
+//         el.classList.remove("hidden")
+//     );
+//     document.querySelectorAll(".fotografian").forEach(function (element) {
+//         element.classList.remove("hidden");
+//     });
+//     row.querySelector(".edit-btn").classList.add("hidden");
+//     row.querySelector(".delete-btn").classList.add("hidden");
+//     row.querySelector(".save-btn").classList.remove("hidden");
+//     row.querySelector(".cancel-btn").classList.remove("hidden");
+// }
 
-function cancelEdit(id) {
-    const row = document.getElementById(`jugador-${id}`);
-    row.querySelectorAll('.jugador-data').forEach(el => el.classList.remove('hidden'));
-    row.querySelectorAll('.jugador-input').forEach(el => el.classList.add('hidden'));
-    row.querySelector('.edit-btn').classList.remove('hidden');
-    row.querySelector('.delete-btn').classList.remove('hidden');
-    row.querySelector('.save-btn').classList.add('hidden');
-    row.querySelector('.cancel-btn').classList.add('hidden');
-}
+// function cancelEdit(id) {
+//     const row = document.getElementById(`jugador-${id}`);
+//     row.querySelectorAll(".jugador-data").forEach((el) =>
+//         el.classList.remove("hidden")
+//     );
+//     row.querySelectorAll(".jugador-input").forEach((el) =>
+//         el.classList.add("hidden")
+//     );
+//     document.querySelectorAll(".fotografian").forEach(function (element) {
+//         element.classList.add("hidden");
+//     });
+//     row.querySelector(".edit-btn").classList.remove("hidden");
+//     row.querySelector(".delete-btn").classList.remove("hidden");
+//     row.querySelector(".save-btn").classList.add("hidden");
+//     row.querySelector(".cancel-btn").classList.add("hidden");
+// }
 
 function saveJugador(id) {
     const row = document.getElementById(`jugador-${id}`);
     const nombre = row.querySelector('input[type="text"]').value;
     const edad = row.querySelector('input[type="number"]:nth-of-type(1)').value;
-    const numeroCamiseta = row.querySelector('input[type="number"]:nth-of-type(2)').value;
+    const numeroCamiseta = row.querySelector(
+        'input[type="number"]:nth-of-type(2)'
+    ).value;
 
     // Aquí deberías hacer una llamada AJAX para guardar los datos en el servidor
     // Por ejemplo, usando fetch:
     fetch(`/jugadores/${id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content"),
         },
-        body: JSON.stringify({ nombre, edad, numero_camiseta: numeroCamiseta })
+        body: JSON.stringify({ nombre, edad, numero_camiseta: numeroCamiseta }),
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Actualizar los datos mostrados
-            row.querySelector('.jugador-data:nth-of-type(1)').textContent = nombre;
-            row.querySelector('.jugador-data:nth-of-type(2)').textContent = edad;
-            row.querySelector('.jugador-data:nth-of-type(3)').textContent = numeroCamiseta;
-            
-            // Volver al modo de visualización
-            cancelEdit(id);
-            
-            // Mostrar un mensaje de éxito
-            toastr.success('Jugador actualizado con éxito');
-        } else {
-            toastr.error('Error al actualizar el jugador');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        toastr.error('Error al actualizar el jugador');
-    });
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                // Actualizar los datos mostrados
+                row.querySelector(".jugador-data:nth-of-type(1)").textContent =
+                    nombre;
+                row.querySelector(".jugador-data:nth-of-type(2)").textContent =
+                    edad;
+                row.querySelector(".jugador-data:nth-of-type(3)").textContent =
+                    numeroCamiseta;
+
+                // Volver al modo de visualización
+                cancelEdit(id);
+
+                // Mostrar un mensaje de éxito
+                toastr.success("Jugador actualizado con éxito");
+            } else {
+                toastr.error("Error al actualizar el jugador");
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            toastr.error("Error al actualizar el jugador");
+        });
 }

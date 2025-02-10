@@ -9,7 +9,7 @@
         <!-- Contenedor del botón y el buscador -->
         <div class="mb-4 flex justify-between items-center">
             <div class="w-full flex justify-center">
-                <x-button-create href="{{ route('TorneosCrear') }}" class="ms-4">
+                <x-button-create href="{{ route('CategoriasCrear') }}" class="ms-4">
                     <i class="fas fa-plus me-2"></i>
                     {{ __('Crear') }}
                 </x-button-create>
@@ -22,43 +22,24 @@
             <table class="min-w-full bg-white border border-gray-300 rounded-lg">
                 <thead>
                     <tr class="bg-gray-200 text-gray-700">
-                        <th class="py-2 px-4 border text-center font-bold">Num.</th>
-                        <th class="py-2 px-4 border text-center font-bold">Nombre</th>
-                        <th class="py-2 px-4 border text-center font-bold">Ctaegor&iacute;a</th>
-                        <th class="py-2 px-4 border text-center font-bold">Modalidad</th>
-                        <th class="py-2 px-4 border text-center font-bold">Fecha de Inicio</th>
-                        <th class="py-2 px-4 border text-center font-bold">Fecha Prevista de Fin</th>
-                        <th class="py-2 px-4 border text-center font-bold">Acciones</th>
+                        <th class="py-2 px-4 border text-center">Num.</th>
+                        <th class="py-2 px-4 border text-center">Nombre</th>
+                        <th class="py-2 px-4 border text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    @foreach ($torneos as $torneo)
+                    @foreach ($categorias as $categoria)
                         <tr class="border hover:bg-gray-100">
-                            {{ \Carbon\Carbon::setLocale('es') }}
                             <td class="py-2 px-4 border">{{ $loop->iteration }}</td>
-                            <td class="py-2 px-4 border">{{ $torneo->nombre }}</td>
-                            <td class="py-2 px-4 border">{{ $torneo->categoria->nombre }}</td>
-                            <td class="py-2 px-4 border">{{ $torneo->modalidad->nombre }}</td>
+                            <td class="py-2 px-4 border">{{ $categoria->nombre }}</td>
                             <td class="py-2 px-4 border">
-                                {{ $torneo->fecha_inicio->isoFormat('D [de] MMMM [de] YYYY') }}
-                            </td>
-                            @if ($torneo->fecha_fin == null)
-                                <td class="py-2 px-4 border">
-                                    <span class="text-red-500 font-bold">No definida</span>
-                                </td>
-                            @else
-                                <td class="py-2 px-4 border">
-                                    {{ $torneo->fecha_fin->isoFormat('D [de] MMMM [de] YYYY') }}
-                                </td>
-                            @endif
-
-                            <td class="py-2 px-4 border">
-
-                                <x-button-edit class="ms-4" href="{{ route('TorneosEditar', $torneo->id) }}">
+                                
+                                <x-button-edit class="ms-4" data-id="{{ $categoria->id }}"
+                                    onclick="openEditModalHandler(this, '/categorias/edit/{{ $categoria->id }}', '/categorias/actualizar/{{ $categoria->id }}', 'Editar Categoría', 'text-blue-500', 'btn btn-primary')">
                                     <i class="fas fa-pencil m-2"></i> {{ __('Editar') }}
-                                </x-button-edit>
-                                <x-button-delete class="ms-4" data-id="{{ $torneo->id }}"
-                                    onclick="openConfirmDeleteModal({{ $torneo->id }})">
+                                </x-button-edit> 
+                                <x-button-delete class="ms-4" data-id="{{ $categoria->id }}"
+                                    onclick="openConfirmDeleteModal({{ $categoria->id }})">
                                     <i class="fas fa-trash m-2"></i> {{ __('Eliminar') }}
                                 </x-button-delete>
                             </td>
@@ -80,7 +61,7 @@
 
 
     @push('scripts')
-        <script src="{{ asset('assets/admin/torneos.js') }}"></script>
+        <script src="{{ asset('assets/admin/categorias.js') }}"></script>
         <script src="{{ asset('assets/sistema/buscadorTabla.js') }}"></script>
         <script src="{{ asset('assets/sistema/paginadorTabla.js') }}"></script>
         <!-- Toastr JS -->

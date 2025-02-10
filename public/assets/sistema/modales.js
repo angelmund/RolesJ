@@ -1,4 +1,4 @@
-// Modal Editar
+// Modal hace que se muestre el modal 
 function openEditModal(title, method, action, bodyContent, titleClass = '', buttonClass = '') {
     const modalTitle = document.getElementById('modal-edit-title');
     modalTitle.innerText = title;
@@ -16,6 +16,7 @@ function openEditModal(title, method, action, bodyContent, titleClass = '', butt
     document.getElementById('modal-edit').classList.remove('hidden');
 }
 
+// Cerrar modal 
 function closeEditModal() {
     document.getElementById('modal-edit').classList.add('hidden');
 }
@@ -35,7 +36,7 @@ function openEditModalHandler(button, fetchUrl, actionUrl, modalTitle, titleClas
             console.error('There was a problem with the fetch operation:', error);
         });
 }
-// Termina modal editar
+// Termina modal 
 
 // Modal Confirmar Guardado
 function openConfirmSaveModal() {
@@ -52,7 +53,7 @@ function closeConfirmSaveModal() {
 // Termina modal confirmar guardado
 
 
-// Modal Confirmar Guardado
+// Modal Confirmar actualizar
 function openConfirmUpdateModal() {
     document.getElementById('modal-confirm-update').classList.remove('hidden');
 }
@@ -60,6 +61,17 @@ function openConfirmUpdateModal() {
 function closeConfirmUpdateModal() {
     document.getElementById('modal-confirm-update').classList.add('hidden');
 }
+// Termina modal confirmar actualizar
+
+//alerta confirmar desde un modal 
+function openAlertaConfirm() {
+    document.getElementById('modal-confirm-update-modal').classList.remove('hidden');
+}
+
+function closeAlertaConfirm() {
+    document.getElementById('modal-confirm-update-modal').classList.add('hidden');
+}
+// Termina alerta confirmar  desde un modal 
 
 function submitEditForm() {
     document.getElementById('modal-update-form').submit();

@@ -98,7 +98,7 @@
                     <div class="grid grid-cols-1 gap-4 mt-4">
                         <div>
                             <label for="num_jugador" class="block text-sm font-medium text-gray-700">N&uacute;mero de Camiseta</label>    
-                            <input type="number" min="1" max="20" id="num_jugador" name="num_jugador" placeholder="Ingresa el número del Jugador"
+                            <input type="text" id="num_jugador" name="num_jugador" placeholder="Ingresa el número del Jugador"
                                 class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             @if ($errors->has('num_jugador'))
                                 <div class="bg-red-500 text-white font-bold mt-2 p-2 rounded w-auto inline-block">

@@ -31,7 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class Posicione extends Model
+class Posicion extends Model
 {
 	protected $table = 'posiciones';
 

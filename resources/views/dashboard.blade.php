@@ -42,6 +42,13 @@
                 <i class="fas fa-cogs text-black"></i> <a href="{{route('ModalidadesIndex')}}" class="text-white">Modalidades</a>
             </h1>
         </div>
+
+        <div class="p-2 bg-orange-700 border border-gray-200 rounded-lg shadow-md w-full h-48 hover:bg-slate-700">
+            <span class="block h-12 w-auto text-white font-bold">#76</span>
+            <h1 class="mt-10 text-xl font-medium text-gray-900 text-center">
+                <i class="fas fa-tags text-amber-200"></i> <a href="{{route('CategoriasIndex')}}" class="text-white">Categor&iacute;as</a>
+            </h1>
+        </div>
         
     </div>
 </x-app-layout>

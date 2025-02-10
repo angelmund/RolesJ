@@ -16,11 +16,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $nombre
  * @property int|null $edad
- * @property int|null $numero
+ * @property int|null $numero_camiseta
+ * @property string|null $foto
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * 
- * @property Collection|JugadorEquipoTorneo[] $jugador_equipo_torneos
+ * @property Collection|JugadorEquipo[] $jugador_equipos
  *
  * @package App\Models
  */
@@ -30,17 +31,18 @@ class Jugador extends Model
 
 	protected $casts = [
 		'edad' => 'int',
-		'numero' => 'int'
+		'numero_camiseta' => 'int'
 	];
 
 	protected $fillable = [
 		'nombre',
 		'edad',
-		'numero'
+		'numero_camiseta',
+		'foto'
 	];
 
-	public function jugador_equipo_torneos()
+	public function jugador_equipos()
 	{
-		return $this->hasMany(JugadorEquipoTorneo::class, 'jugador_id');
+		return $this->hasMany(JugadorEquipo::class, 'jugador_id');
 	}
 }

@@ -9,7 +9,11 @@
             </div>
             <div class="mt-4">
                 <button type="button" id="modal-edit-submit-button" class="inline-flex items-center px-3 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-500 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-700 focus:ring-offset-2 disabled:opacity-50 transition ease-in-out duration-150"></button>
-                <button type="submit" class="inline-flex items-center px-3 py-2 bg-green-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-400 focus:bg-green-500 active:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 transition ease-in-out duration-150" id="modal-edit-submit-button">Guardar</button>
+                {{--  <button id="btn_enviar" type="button" class="inline-flex items-center px-3 py-2 bg-green-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-400 focus:bg-green-500 active:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 transition ease-in-out duration-150" id="modal-edit-submit-button">Guardar</button>  --}}
+                <x-button-save-modal onclick="openAlertaConfirm()">
+                    <i class="fas fa-save mr-1"></i>
+                    Guardar
+                </x-button-save-modal>
                 <button type="button" class="inline-flex items-center px-3 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-500 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 transition ease-in-out duration-150" onclick="closeEditModal()">Cancelar</button>
             </div>
         </form>
@@ -69,6 +73,24 @@
     </div>
 </div>
 
+
+<div id="modal-confirm-update-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+        <div class="text-center mb-4">
+            <i class="fas fa-exclamation-circle text-1xl text-orange-500"></i>
+        </div>
+        <h2 id="modal-confirm-update-modal-title" class="text-xl font-bold text-center text-green-500 mb-4">Confirmar Actualizar</h2>
+        <p class="text-blue-500 text-center">¿Estás seguro de que deseas guardar los cambios?</p>
+        <div class="mt-4 flex justify-center space-x-4">
+            <button type="button" class="inline-flex items-center px-3 py-2 bg-green-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-400 focus:bg-green-500 active:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 transition ease-in-out duration-150" id="btn_Aceptar">
+                <i class="fas fa-save mr-1"></i> Si, guardar
+            </button>
+            <button type="button" class="inline-flex items-center px-3 py-2 bg-red-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-400 focus:bg-red-500 active:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 transition ease-in-out duration-150" onclick="closeAlertaConfirm()">
+                <i class="fas fa-times mr-1"></i> Cancelar
+            </button>
+        </div>
+    </div>
+</div>
 
 <div id="modal-confirm-delete" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg">

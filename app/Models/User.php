@@ -6,11 +6,11 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-
+use Illuminate\Notifications\Notifiable; 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Class User
  * 
@@ -30,10 +30,9 @@ use Illuminate\Notifications\Notifiable;
  *
  * @package App\Models
  */
-
- class User extends Authenticatable
+class User extends Authenticatable
  {
-	 use HasFactory, Notifiable;
+	use HasFactory, Notifiable;
 	protected $table = 'users';
 
 	protected $casts = [

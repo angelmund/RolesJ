@@ -39,6 +39,16 @@
                 @endif
             </div>
             <div>
+                <label for="categoria_id" class="block text-sm font-medium text-gray-700">Selecciona una categor&iacute;a</label>
+                <select name="categoria_id" id="categoria_id" class="select2 w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="" disabled selected>Selecciona una categor&iacute;a</option>
+                    @foreach ($categorias as $categoria)
+                        <option value="{{ $categoria->id }}" {{ $torneo->categoria_id == $categoria->id ?'selected' : '' }}>{{ $categoria->nombre }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
                 <label for="modalidad_id" class="block text-sm font-medium text-gray-700">Selecciona la modalidad del torneo</label>
                 <select name="modalidad_id" id="modalidad_id" class="select2 w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="" disabled>Selecciona una modalidad</option>
